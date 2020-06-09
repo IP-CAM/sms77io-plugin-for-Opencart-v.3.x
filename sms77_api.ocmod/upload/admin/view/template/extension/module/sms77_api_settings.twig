@@ -14,7 +14,7 @@
                 </a>
             </div>
 
-            <h1>{{ heading_settings }}</h1>
+            <h1>{{ heading }}</h1>
 
             <ul class='breadcrumb'>
                 {% for breadcrumb in breadcrumbs %}
@@ -31,6 +31,7 @@
                 <button type='button' class='close' data-dismiss='alert'>&times;</button>
             </div>
         {% endif %}
+
         <div class='panel panel-default'>
             <div class='panel-heading'>
                 <h3 class='panel-title'><i class='fa fa-pencil'></i> {{ text_edit }}</h3>
@@ -40,8 +41,7 @@
                 <form action='{{ action }}' method='post' enctype='multipart/form-data'
                       id='form-module' class='form-horizontal'>
                     <div class='form-group'>
-                        <label class='col-sm-2 control-label'
-                               for='input-apiKey'>
+                        <label class='col-sm-2 control-label' for='input-apiKey'>
                             {{ settings_apiKey }}
                         </label>
 
@@ -50,7 +50,7 @@
                                    value='{{ settings.sms77_api_apiKey }}' class='form-control'
                                    placeholder='{{ settings_apiKey }}' id='input-apiKey' required/>
 
-                            {% if error_to %}
+                            {% if error_apiKey %}
                                 <div class='text-danger'>{{ error_apiKey }}</div>
                             {% endif %}
                         </div>

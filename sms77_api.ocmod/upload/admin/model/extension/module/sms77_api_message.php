@@ -24,7 +24,7 @@ class ModelExtensionModuleSms77ApiMessage extends Model {
     public function setMessageResponse($id, $response) {
         $response = $this->_toString($response);
 
-        $this->db->query("UPDATE " . DB_PREFIX . "sms77_api_message SET response = '" . $response . "' WHERE id = '" . (int)$id . "'");
+        $this->db->query("UPDATE " . DB_PREFIX . "sms77_api_message SET response = '$response' WHERE id = '" . (int)$id . "'");
 
         $this->cache->delete('sms77_api_message');
     }
@@ -54,7 +54,7 @@ class ModelExtensionModuleSms77ApiMessage extends Model {
                 $sql .= " ORDER BY id.title";
             }
 
-            if (isset($data['order']) && ($data['order'] == 'DESC')) {
+            if (isset($data['order']) && 'DESC' === $data['order']) {
                 $sql .= " DESC";
             } else {
                 $sql .= " ASC";
@@ -72,22 +72,22 @@ class ModelExtensionModuleSms77ApiMessage extends Model {
                 $sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
             }
 
-            $query = $this->db->query($sql);
-
-            return $query->rows;
-        } else {
-            $message = $this->cache->get('sms77_api_message.' . (int)$this->config->get('config_language_id'));
-
-            if (!$message) {
-                $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "sms77_api_message");
-
-                $message = $query->rows;
-
-                $this->cache->set('sms77_api_message.' . (int)$this->config->get('config_language_id'), $message);
-            }
-
-            return $message;
+            return $this->db->query($sql)->rows;
         }
+
+        $langId = (int)$this->config->get('config_language_id');
+
+        $message = $this->cache->get('sms77_api_message.' . $langId);
+
+        if (!$message) {
+            $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "sms77_api_message");
+
+            $message = $query->rows;
+
+            $this->cache->set('sms77_api_message.' . $langId, $message);
+        }
+
+        return $message;
     }
 
     public function getTotalMessages() {

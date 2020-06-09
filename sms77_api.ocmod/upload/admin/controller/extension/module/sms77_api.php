@@ -8,7 +8,7 @@ class ControllerExtensionModuleSms77Api extends Controller {
             ? $this->request->get['controllerAction'] : 'settings'}();
     }
 
-    public static function isValidPlaceholder($word) {
+    private static function isValidPlaceholder($word) {
         $startsWith = function ($string, $startString) {
             return 0 === strpos($string, $startString);
         };
@@ -96,6 +96,9 @@ class ControllerExtensionModuleSms77Api extends Controller {
             $text = isset($this->request->post['text']) ? $this->request->post['text'] : null;
             $to = isset($this->request->post['to']) ? $this->request->post['to'] : null;
             $from = isset($this->request->post['from']) ? $this->request->post['from'] : null;
+            $label = isset($this->request->post['label']) ? $this->request->post['label'] : null;
+            $udh = isset($this->request->post['udh']) ? $this->request->post['udh'] : null;
+            $delay = isset($this->request->post['delay']) ? $this->request->post['delay'] : null;
             $customerGroup = isset($this->request->post['customerGroup'])
                 ? (int)$this->request->post['customerGroup'] : null;
 
@@ -158,10 +161,13 @@ class ControllerExtensionModuleSms77Api extends Controller {
                         $this->model_extension_module_sms77_api_message->addMessage($this->request->post),
                         json_decode(file_get_contents('https://gateway.sms77.io/api/sms?' .
                             http_build_query(array_merge($request, [
+                                'delay' => $delay,
                                 'from' => $from,
+                                'label' => $label,
                                 'json' => 1,
                                 'p' => $apiKey,
                                 'sendWith' => 'opencart',
+                                'udh' => $udh,
                             ]))),
                             true));
                 }
@@ -175,11 +181,16 @@ class ControllerExtensionModuleSms77Api extends Controller {
             }
         }
 
-        $data['customerGroups'] = $this->model_customer_customer_group->getCustomerGroups();
-        $data['error_warning'] = isset($this->error['warning']) ? $this->error['warning'] : '';
-        $data['error_to'] = isset($this->error['to']) ? $this->error['to'] : '';
-        $data['error_from'] = isset($this->error['from']) ? $this->error['from'] : '';
-        $data['error_text'] = isset($this->error['text']) ? $this->error['text'] : '';
+        foreach (['warning', 'to', 'from', 'text', 'delay', 'udh', 'label'] as $field) {
+            $data["error_$field"] = isset($this->error[$field]) ? $this->error[$field] : '';
+        }
+
+        $data['action'] = $hasModuleId
+            ? $this->url->link('extension/module/sms77_api', 'user_token='
+                . $userToken . '&module_id=' . $this->request->get['module_id']
+                . '&controllerAction=messages', true)
+            : $this->url->link('extension/module/sms77_api',
+                "user_token=$userToken&controllerAction=messages", true);
         $data['breadcrumbs'] = [
             [
                 'href' => $this->url->link('common/dashboard', 'user_token=' . $this->session->data['user_token'], true),
@@ -193,31 +204,29 @@ class ControllerExtensionModuleSms77Api extends Controller {
                 'href' => $hasModuleId
                     ? $this->url->link('extension/module/sms77_api', 'user_token=' . $this->session->data['user_token'] . '&module_id=' . $this->request->get['module_id'], true)
                     : $this->url->link('extension/module/sms77_api_messages', 'user_token=' . $this->session->data['user_token'], true),
-                'text' => $this->language->get('heading_messages'),
+                'text' => $this->language->get('heading'),
             ],
         ];
-        $data['action'] = $hasModuleId
-            ? $this->url->link('extension/module/sms77_api', 'user_token='
-                . $userToken . '&module_id=' . $this->request->get['module_id']
-                . '&controllerAction=messages', true)
-            : $this->url->link('extension/module/sms77_api',
-                "user_token=$userToken&controllerAction=messages", true);
         $data['cancel'] =
             $this->url->link("marketplace/extension", "user_token={$userToken}&type=module", true);
-        $data['messages'] = $this->model_extension_module_sms77_api_message->getMessages();
-        $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
+        $data['customerGroups'] = $this->model_customer_customer_group->getCustomerGroups();
+        $data['value_delay'] = $this->_toData('delay');
+        $data['value_from'] = $this->_toData('from');
+        $data['value_label'] = $this->_toData('label');
+        $data['value_text'] = $this->_toData('text');
+        $data['value_to'] = $this->_toData('to');
+        $data['value_udh'] = $this->_toData('udh');
         $data['footer'] = $this->load->controller('common/footer');
-        $data['from'] = $this->_toData('from');
-        $data['to'] = $this->_toData('to');
-        $data['text'] = $this->_toData('text');
+        $data['header'] = $this->load->controller('common/header');
+        $data['messages'] = $this->model_extension_module_sms77_api_message->getMessages();
 
         $this->response->setOutput($this->load->view('extension/module/sms77_api_messages', $data));
     }
 
     private function _toData($key) {
         if (isset($this->request->get['module_id'])
-            && ('POST' !== $this->request->server['REQUEST_METHOD'])) {
+            && 'POST' !== $this->request->server['REQUEST_METHOD']) {
             $module_info = $this->model_setting_module->getModule($this->request->get['module_id']);
         }
 
