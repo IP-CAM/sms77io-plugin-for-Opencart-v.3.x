@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification
+        xmlns="https://github.com/vqmod/vqmod"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://github.com/vqmod/vqmod https://raw.githubusercontent.com/vqmod/vqmod/master/vqmod.xsd">
+    >
+    <name>Admin menu links</name>
+    <version>3.0</version>
+    <author>sms77 e.K.</author>
+    <link>http://sms77.io</link>
+    <code>sms77_api_add_admin_menu_entries</code>
+    <description>Add extension links to admin menu</description>
+    <file path="admin/language/en-gb/common/column_left.php">
+        <operation>
+            <search><![CDATA[$_['text_other_status']]]></search>
+            <add position="after">
+                <![CDATA[
+                    $_['text_sms77_send'] = 'Send SMS';
+                    $_['text_sms77_settings']  = 'Settings';
+                ]]>
+            </add>
+        </operation>
+    </file>
+    <file path="admin/controller/common/column_left.php">
+        <operation>
+            <search><![CDATA[ if ($this->user->hasPermission('access', 'marketing/contact')) { ]]></search>
+            <add position="after"><![CDATA[
+                $marketing[] = [
+                    'children' => [
+                        [
+                            'href'     => $this->url->link('extension/module/sms77_api', 'user_token=' . $this->session->data['user_token'] . '&controllerAction=messages', true),
+                            'name'	   => $this->language->get('text_sms77_send'),
+                        ],
+                        [
+                            'href'     => $this->url->link('extension/module/sms77_api', 'user_token=' . $this->session->data['user_token'] . '&controllerAction=settings', true),
+                            'name'	   => $this->language->get('text_sms77_settings'),
+                        ]
+                    ],
+                    'href'     => '',
+                    'name'	   => "Sms77.io API",
+                ];
+            ]]></add>
+        </operation>
+    </file>
+</modification>
