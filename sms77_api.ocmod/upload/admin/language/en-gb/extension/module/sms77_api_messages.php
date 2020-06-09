@@ -1,5 +1,5 @@
 <?php
-$_['heading_messages'] = 'Send SMS - sms77io';
+$_['heading'] = 'Send SMS - sms77io';
 
 $_['text_extension'] = 'Extensions';
 $_['text_success'] = 'Success: You have modified the sms77io module!';
@@ -15,3 +15,7 @@ $_['error_to'] = 'Invalid recipient!';
 $_['error_text'] = 'Invalid message text!';
 
 $_['settings_apiKey'] = 'API Key';
+
+$_['filter_customerGroup'] = 'Customer Group Filter (ignored if "To" is set)';
+
+$_['placeholder_text'] = 'Hi {{firstname}} {{lastname}} ! Is ur email {{email}} correct? If given we will contact you on your fax {{fax}} in the future so please recheck.';
