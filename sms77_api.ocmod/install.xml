@@ -15,8 +15,8 @@
             <search><![CDATA[$_['text_other_status']]]></search>
             <add position="after">
                 <![CDATA[
-                    $_['text_sms77_send'] = 'Send SMS';
-                    $_['text_sms77_settings']  = 'Settings';
+                    $_['text_sms77_api_send'] = 'Send SMS';
+                    $_['text_sms77_api_settings']  = 'Settings';
                 ]]>
             </add>
         </operation>
@@ -29,11 +29,11 @@
                     'children' => [
                         [
                             'href'     => $this->url->link('extension/module/sms77_api', 'user_token=' . $this->session->data['user_token'] . '&controllerAction=messages', true),
-                            'name'	   => $this->language->get('text_sms77_send'),
+                            'name'	   => $this->language->get('text_sms77_api_send'),
                         ],
                         [
                             'href'     => $this->url->link('extension/module/sms77_api', 'user_token=' . $this->session->data['user_token'] . '&controllerAction=settings', true),
-                            'name'	   => $this->language->get('text_sms77_settings'),
+                            'name'	   => $this->language->get('text_sms77_api_settings'),
                         ]
                     ],
                     'href'     => '',

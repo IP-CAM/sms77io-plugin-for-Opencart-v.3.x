@@ -1,4 +1,4 @@
-{{ header }}{{ column_left }}
+{{ header }} {{ column_left }}
 
 <div id='content'>
     <div class='page-header'>
@@ -14,7 +14,7 @@
                 </a>
             </div>
 
-            <h1>{{ heading }}</h1>
+            <h1>{{ heading_settings }}</h1>
 
             <ul class='breadcrumb'>
                 {% for breadcrumb in breadcrumbs %}
@@ -34,24 +34,72 @@
 
         <div class='panel panel-default'>
             <div class='panel-heading'>
-                <h3 class='panel-title'><i class='fa fa-pencil'></i> {{ text_edit }}</h3>
+                <h3 class='panel-title'><i class='fa fa-pencil'></i> {{ text_edit_settings }}</h3>
             </div>
 
             <div class='panel-body'>
                 <form action='{{ action }}' method='post' enctype='multipart/form-data'
                       id='form-module' class='form-horizontal'>
+                    <h2>{{ text_settings_required }}</h2>
+
                     <div class='form-group'>
                         <label class='col-sm-2 control-label' for='input-apiKey'>
-                            {{ settings_apiKey }}
+                            {{ setting_apiKey }}
                         </label>
 
                         <div class='col-sm-10'>
-                            <input name='sms77_api_apiKey'
-                                   value='{{ settings.sms77_api_apiKey }}' class='form-control'
-                                   placeholder='{{ settings_apiKey }}' id='input-apiKey' required/>
+                            <input name='sms77_api_apiKey' value='{{ settings.sms77_api_apiKey }}'
+                                   class='form-control' id='input-apiKey' required/>
 
                             {% if error_apiKey %}
                                 <div class='text-danger'>{{ error_apiKey }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <h2>{{ text_settings_default }}</h2>
+
+                    <div class='form-group'>
+                        <label class='col-sm-2 control-label' for='input-from'>
+                            {{ setting_from }}
+                        </label>
+
+                        <div class='col-sm-10'>
+                            <input name='sms77_api_from' value='{{ settings.sms77_api_from }}'
+                                   class='form-control' id='input-from'/>
+
+                            {% if error_from %}
+                                <div class='text-danger'>{{ error_from }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class='form-group'>
+                        <label class='col-sm-2 control-label' for='input-label'>
+                            {{ setting_label }}
+                        </label>
+
+                        <div class='col-sm-10'>
+                            <input name='sms77_api_label' value='{{ settings.sms77_api_label }}'
+                                   class='form-control' id='input-label'/>
+
+                            {% if error_label %}
+                                <div class='text-danger'>{{ error_label }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class='form-group'>
+                        <label class='col-sm-2 control-label' for='input-udh'>
+                            {{ setting_udh }}
+                        </label>
+
+                        <div class='col-sm-10'>
+                            <input name='sms77_api_udh' value='{{ settings.sms77_api_udh }}'
+                                   class='form-control' id='input-udh'/>
+
+                            {% if error_udh %}
+                                <div class='text-danger'>{{ error_udh }}</div>
                             {% endif %}
                         </div>
                     </div>

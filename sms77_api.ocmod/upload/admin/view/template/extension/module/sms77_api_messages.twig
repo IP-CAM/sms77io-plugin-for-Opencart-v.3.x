@@ -1,10 +1,16 @@
-{{ header }}{{ column_left }}
+{{ header }} {{ column_left }}
 
 <div id='content'>
     <div class='page-header'>
         <div class='container-fluid'>
             <div class='pull-right'>
-                <button type='submit' form='form-module' data-toggle='tooltip'
+                <button class='btn btn-success' data-toggle='collapse'
+                        data-target='#writeSms' aria-expanded='false' aria-controls='writeSms'>
+                    <i class='fa fa-plus'></i>
+                </button>
+
+                <button style='display: none;' type='submit' form='form-module'
+                        data-toggle='tooltip'
                         title='{{ button_save }}' class='btn btn-primary'><i class='fa fa-save'></i>
                 </button>
 
@@ -14,27 +20,27 @@
                 </a>
             </div>
 
-            <h1>{{ heading }}</h1>
+            <h1>{{ heading_messages }}</h1>
 
             <ul class='breadcrumb'>
                 {% for breadcrumb in breadcrumbs %}
                     <li><a href='{{ breadcrumb.href }}'>{{ breadcrumb.text }}</a></li>
                 {% endfor %}
             </ul>
+
+            {% if error_warning %}
+                <div class='alert alert-danger alert-dismissible'><i
+                            class='fa fa-exclamation-circle'></i> {{ error_warning }}
+                    <button type='button' class='close' data-dismiss='alert'>&times;</button>
+                </div>
+            {% endif %}
         </div>
     </div>
 
-    <div class='container-fluid'>
-        {% if error_warning %}
-            <div class='alert alert-danger alert-dismissible'><i
-                        class='fa fa-exclamation-circle'></i> {{ error_warning }}
-                <button type='button' class='close' data-dismiss='alert'>&times;</button>
-            </div>
-        {% endif %}
-
+    <div class='container-fluid collapse' id="writeSms">
         <div class='panel panel-default'>
             <div class='panel-heading'>
-                <h3 class='panel-title'><i class='fa fa-pencil'></i> {{ text_edit }}</h3>
+                <h2 class='panel-title'><i class='fa fa-pencil'></i> {{ text_send_sms }}</h2>
             </div>
 
             <div class='panel-body'>
@@ -47,6 +53,8 @@
                         <div class="col-sm-10">
                             <select class="form-control" id='input-customerGroup'
                                     name='customerGroup'>
+                                <option selected value></option>
+
                                 {% for customerGroup in customerGroups %}
                                     <option value='{{ customerGroup.customer_group_id }}'>
                                         {{ customerGroup.name }}</option>
@@ -56,9 +64,11 @@
                     </div>
 
                     <div class='form-group'>
-                        <label class='col-sm-2 control-label' for='input-to'>{{ entry_to }}</label>
+                        <label class='col-sm-2 control-label'
+                               for='input-to'>{{ setting_to }}</label>
                         <div class='col-sm-10'>
-                            <input name='to' value='{{ value_to }}' class='form-control'
+                            <input name='to' value='{{ settings.sms77_api_to }}'
+                                   class='form-control'
                                    id='input-to'/>
 
                             {% if error_to %}
@@ -69,10 +79,11 @@
 
                     <div class='form-group'>
                         <label class='col-sm-2 control-label' for='input-from'>
-                            {{ entry_from }}</label>
+                            {{ setting_from }}</label>
 
                         <div class='col-sm-10'>
-                            <input name='from' value='{{ value_from }}' class='form-control'
+                            <input name='from' value='{{ settings.sms77_api_from }}'
+                                   class='form-control'
                                    id='input-from'/>
 
                             {% if error_from %}
@@ -83,11 +94,11 @@
 
                     <div class='form-group'>
                         <label class='col-sm-2 control-label' for='input-label'>
-                            {{ entry_label }}</label>
+                            {{ setting_label }}</label>
 
                         <div class='col-sm-10'>
-                            <input pattern='[A-Z|a-z|0-9|.|\-|_|@]' name='label'
-                                   value='{{ value_label }}'
+                            <input pattern='[A-Z|a-z|0-9|.|\-|_|@]+' name='label'
+                                   value='{{ settings.sms77_api_label }}'
                                    class='form-control' id='input-label'/>
 
                             {% if error_label %}
@@ -97,11 +108,11 @@
                     </div>
 
                     <div class='form-group'>
-                        <label class='col-sm-2 control-label' for='input-delay'>{{ entry_delay }}
+                        <label class='col-sm-2 control-label' for='input-delay'>{{ setting_delay }}
                         </label>
 
                         <div class='col-sm-10'>
-                            <input name='delay' value='{{ value_delay }}'
+                            <input name='delay' value='{{ settings.sms77_api_delay }}'
                                    class='form-control' id='input-delay'/>
 
                             {% if error_delay %}
@@ -111,11 +122,11 @@
                     </div>
 
                     <div class='form-group'>
-                        <label class='col-sm-2 control-label' for='input-udh'>{{ entry_udh }}
+                        <label class='col-sm-2 control-label' for='input-udh'>{{ setting_udh }}
                         </label>
 
                         <div class='col-sm-10'>
-                            <input name='udh' value='{{ value_udh }}'
+                            <input name='udh' value='{{ settings.sms77_api_udh }}'
                                    class='form-control' id='input-udh'/>
 
                             {% if error_udh %}
@@ -126,12 +137,13 @@
 
                     <div class='form-group'>
                         <label class='col-sm-2 control-label'
-                               for='input-text'>{{ entry_text }}</label>
+                               for='input-text'>{{ setting_text }}</label>
                         <div class='col-sm-10'>
                             <textarea data-sms77-sms name='text'
                                       placeholder='{{ placeholder_text }}'
                                       id='input-text'
-                                      class='form-control' required>{{ value_text }}</textarea>
+                                      class='form-control'
+                                      required>{{ settings.sms77_api_text }}</textarea>
 
                             {% if error_text %}
                                 <div class='text-danger'>{{ error_text }}</div>
@@ -142,8 +154,38 @@
             </div>
         </div>
     </div>
+
+    <div class='container-fluid'>
+        <div class='panel panel-default'>
+            <div class='panel-heading'>
+                <h2 class='panel-title'><i class='fa fa-envelope'></i> {{ text_msg_history }}</h2>
+            </div>
+
+            <div class='panel-body'>
+                <table class='table table-striped'>
+                    <caption>{{ caption_msg_history }}</caption>
+
+                    <thead>
+                    <tr>
+                        <th>{{ text_id }}</th>
+                        <th>{{ text_config }}</th>
+                        <th>{{ text_response }}</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    {% for message in messages %}
+                        <tr>
+                            <td>{{ message.id }}</td>
+                            <td>{{ message.config }}</td>
+                            <td>{{ message.response }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 
 {{ footer }}
-
-<script src='https://unpkg.com/@sms77.io/counter@1.0.0/dist/index.js'></script>
