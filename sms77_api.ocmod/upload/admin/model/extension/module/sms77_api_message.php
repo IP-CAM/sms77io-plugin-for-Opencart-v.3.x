@@ -93,4 +93,18 @@ class ModelExtensionModuleSms77ApiMessage extends Model {
     public function getTotalMessages() {
         return $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "sms77_api_message")->row['total'];
     }
+
+    public function install() {
+        $this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "sms77_api_message` (
+		  `id` INT(11) NOT NULL AUTO_INCREMENT,
+		  `config` TEXT NOT NULL,
+          `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          `response` TEXT DEFAULT NULL,
+		  PRIMARY KEY (`id`)
+		) ENGINE=MyISAM DEFAULT CHARSET=utf8");
+    }
+
+    public function uninstall() {
+        $this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "sms77_api_message`");
+    }
 }

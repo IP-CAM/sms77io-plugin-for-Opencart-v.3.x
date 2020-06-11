@@ -108,6 +108,22 @@
                     </div>
 
                     <div class='form-group'>
+                        <label class='col-sm-2 control-label' for='input-foreign_id'>
+                            {{ setting_foreign_id }}
+                        </label>
+
+                        <div class='col-sm-10'>
+                            <input pattern='[A-Z|a-z|0-9|.|\-|_|@]+' name='foreign_id'
+                                   value='{{ settings.sms77_api_foreign_id }}'
+                                   class='form-control' id='input-foreign_id'/>
+
+                            {% if error_foreign_id %}
+                                <div class='text-danger'>{{ error_foreign_id }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class='form-group'>
                         <label class='col-sm-2 control-label' for='input-delay'>{{ setting_delay }}
                         </label>
 
@@ -131,6 +147,66 @@
 
                             {% if error_udh %}
                                 <div class='text-danger'>{{ error_udh }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class='form-group'>
+                        <label class='col-sm-2 control-label' for='input-debug'>{{ setting_debug }}
+                        </label>
+
+                        <div class='col-sm-10'>
+                            <input type='checkbox' name='debug'
+                                   {% if settings.sms77_api_debug %}checked{% endif %}
+                                   class='form-control' id='input-debug'/>
+
+                            {% if error_debug %}
+                                <div class='text-danger'>{{ error_debug }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class='form-group'>
+                        <label class='col-sm-2 control-label'
+                               for='input-no_reload'>{{ setting_no_reload }}</label>
+
+                        <div class='col-sm-10'>
+                            <input type='checkbox' name='no_reload'
+                                   {% if settings.sms77_api_no_reload %}checked{% endif %}
+                                   class='form-control' id='input-no_reload'/>
+
+                            {% if error_no_reload %}
+                                <div class='text-danger'>{{ error_no_reload }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class='form-group'>
+                        <label class='col-sm-2 control-label'
+                               for='input-flash'>{{ setting_flash }}</label>
+
+                        <div class='col-sm-10'>
+                            <input type='checkbox' name='flash'
+                                   {% if settings.sms77_api_flash %}checked{% endif %}
+                                   class='form-control' id='input-flash'/>
+
+                            {% if error_flash %}
+                                <div class='text-danger'>{{ error_flash }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class='form-group'>
+                        <label class='col-sm-2 control-label'
+                               for='input-performance_tracking'>{{ setting_performance_tracking }}</label>
+
+                        <div class='col-sm-10'>
+                            <input type='checkbox' name='performance_tracking'
+                                   {% if settings.sms77_api_performance_tracking %}checked{% endif %}
+                                   class='form-control' id='input-performance_tracking'/>
+
+                            {% if error_performance_tracking %}
+                                <div class='text-danger'>{{ error_performance_tracking }}</div>
                             {% endif %}
                         </div>
                     </div>
@@ -162,12 +238,12 @@
             </div>
 
             <div class='panel-body'>
-                <table class='table table-striped'>
+                <table class='table table-responsive table-striped'>
                     <caption>{{ caption_msg_history }}</caption>
 
                     <thead>
                     <tr>
-                        <th>{{ text_id }}</th>
+                        <th>{{ text_created }}</th>
                         <th>{{ text_config }}</th>
                         <th>{{ text_response }}</th>
                     </tr>
@@ -176,7 +252,7 @@
                     <tbody>
                     {% for message in messages %}
                         <tr>
-                            <td>{{ message.id }}</td>
+                            <td>{{ message.created }}</td>
                             <td>{{ message.config }}</td>
                             <td>{{ message.response }}</td>
                         </tr>

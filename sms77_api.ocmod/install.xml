@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<modification
-        xmlns="https://github.com/vqmod/vqmod"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://github.com/vqmod/vqmod https://raw.githubusercontent.com/vqmod/vqmod/master/vqmod.xsd">
-    >
+<modification>
     <name>Admin menu links</name>
     <version>3.0</version>
     <author>sms77 e.K.</author>

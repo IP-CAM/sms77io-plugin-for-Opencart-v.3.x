@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const $submit = document.querySelector('button[form="form-module"]');
     const $write = $submit.previousElementSibling;
 
-    $('#writeSms').on('shown.bs.collapse', function () {
+    $('#writeSms').on('shown.bs.collapse', () => {
         $submit.style.display = 'inline-block';
 
         $write.style.display = 'none';

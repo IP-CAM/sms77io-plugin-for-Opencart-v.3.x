@@ -26,8 +26,15 @@
 
     <div class='container-fluid'>
         {% if error_warning %}
-            <div class='alert alert-danger alert-dismissible'><i
+            <div class='alert alert-warning alert-dismissible'><i
                         class='fa fa-exclamation-circle'></i> {{ error_warning }}
+                <button type='button' class='close' data-dismiss='alert'>&times;</button>
+            </div>
+        {% endif %}
+
+        {% if error_unchanged %}
+            <div class='alert alert-info alert-dismissible'><i
+                        class='fa fa-exclamation-circle'></i> {{ error_unchanged }}
                 <button type='button' class='close' data-dismiss='alert'>&times;</button>
             </div>
         {% endif %}
@@ -43,16 +50,16 @@
                     <h2>{{ text_settings_required }}</h2>
 
                     <div class='form-group'>
-                        <label class='col-sm-2 control-label' for='input-apiKey'>
-                            {{ setting_apiKey }}
+                        <label class='col-sm-2 control-label' for='input-key'>
+                            {{ setting_key }}
                         </label>
 
                         <div class='col-sm-10'>
-                            <input name='sms77_api_apiKey' value='{{ settings.sms77_api_apiKey }}'
-                                   class='form-control' id='input-apiKey' required/>
+                            <input name='sms77_api_key' value='{{ settings.sms77_api_key }}'
+                                   class='form-control' id='input-key' required/>
 
-                            {% if error_apiKey %}
-                                <div class='text-danger'>{{ error_apiKey }}</div>
+                            {% if error_key %}
+                                <div class='text-danger'>{{ error_key }}</div>
                             {% endif %}
                         </div>
                     </div>
@@ -80,11 +87,28 @@
                         </label>
 
                         <div class='col-sm-10'>
-                            <input name='sms77_api_label' value='{{ settings.sms77_api_label }}'
+                            <input pattern='[A-Z|a-z|0-9|.|\-|_|@]+' name='sms77_api_label'
+                                   value='{{ settings.sms77_api_label }}'
                                    class='form-control' id='input-label'/>
 
                             {% if error_label %}
                                 <div class='text-danger'>{{ error_label }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class='form-group'>
+                        <label class='col-sm-2 control-label' for='input-foreign_id'>
+                            {{ setting_foreign_id }}
+                        </label>
+
+                        <div class='col-sm-10'>
+                            <input pattern='[A-Z|a-z|0-9|.|\-|_|@]+' name='sms77_api_foreign_id'
+                                   value='{{ settings.sms77_api_foreign_id }}'
+                                   class='form-control' id='input-foreign_id'/>
+
+                            {% if error_foreign_id %}
+                                <div class='text-danger'>{{ error_foreign_id }}</div>
                             {% endif %}
                         </div>
                     </div>
@@ -100,6 +124,66 @@
 
                             {% if error_udh %}
                                 <div class='text-danger'>{{ error_udh }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class='form-group'>
+                        <label class='col-sm-2 control-label' for='input-debug'>{{ setting_debug }}
+                        </label>
+
+                        <div class='col-sm-10'>
+                            <input type='checkbox' name='sms77_api_debug'
+                                   {% if settings.sms77_api_debug %}checked{% endif %}
+                                   class='form-control' id='input-debug'/>
+
+                            {% if error_debug %}
+                                <div class='text-danger'>{{ error_debug }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class='form-group'>
+                        <label class='col-sm-2 control-label'
+                               for='input-no_reload'>{{ setting_no_reload }}</label>
+
+                        <div class='col-sm-10'>
+                            <input type='checkbox' name='sms77_api_no_reload'
+                                   {% if settings.sms77_api_no_reload %}checked{% endif %}
+                                   class='form-control' id='input-no_reload'/>
+
+                            {% if error_no_reload %}
+                                <div class='text-danger'>{{ error_no_reload }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class='form-group'>
+                        <label class='col-sm-2 control-label'
+                               for='input-flash'>{{ setting_flash }}</label>
+
+                        <div class='col-sm-10'>
+                            <input type='checkbox' name='sms77_api_flash'
+                                   {% if settings.sms77_api_flash %}checked{% endif %}
+                                   class='form-control' id='input-flash'/>
+
+                            {% if error_flash %}
+                                <div class='text-danger'>{{ error_flash }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class='form-group'>
+                        <label class='col-sm-2 control-label'
+                               for='input-performance_tracking'>{{ setting_performance_tracking }}</label>
+
+                        <div class='col-sm-10'>
+                            <input type='checkbox' name='sms77_api_performance_tracking'
+                                   {% if settings.sms77_api_performance_tracking %}checked{% endif %}
+                                   class='form-control' id='input-performance_tracking'/>
+
+                            {% if error_performance_tracking %}
+                                <div class='text-danger'>{{ error_performance_tracking }}</div>
                             {% endif %}
                         </div>
                     </div>
