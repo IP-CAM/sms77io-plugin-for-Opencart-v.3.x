@@ -12,24 +12,56 @@
  * @property object $model_customer_customer_group
  * @property object $model_customer_customer
  * @property object $model_extension_module_sms77_api_message
+ * @property object $model_extension_module_sms77_api_voice
  * @property object $url
  * @property object $db
  * @property object $model_setting_module
  */
 class ControllerExtensionModuleSms77Api extends Controller {
+    const MODULE_KEY = 'sms77_api';
+    const EXT_MODULE_BASE = 'extension/module/';
+    const MODULE_DIR = 'extension/module/sms77_api';
+    private $_placeholderKeys = [
+        'custom_field',
+        'date_added',
+        'email',
+        'fax',
+        'firstname',
+        'ip',
+        'lastname',
+        'telephone',
+    ];
+    private $_defaultSettings = ['status' => 1, 'name' => 'Sms77.io API'];
+    private $_commonFields = [
+        'debug',
+        'debug',
+        'flash',
+        'foreign_id',
+        'from',
+        'label',
+        'no_reload',
+        'performance_tracking',
+        'udh',
+        'warning',
+    ];
     private $error = [];
 
-    public static $defaultSettings = ['status' => 1, 'name' => 'Sms77.io API'];
-
-    public static $commonFields = ['warning', 'from', 'label', 'udh', 'debug',
-        'no_reload', 'debug', 'flash', 'performance_tracking', 'foreign_id',];
-
     public function index() {
-        $this->load->language('extension/module/sms77_api');
+        $this->load->language(self::MODULE_DIR);
         $this->load->model('setting/setting');
 
-        $this->{isset($this->request->get['controllerAction'])
-            ? $this->request->get['controllerAction'] : 'settings'}();
+        $action = isset($this->request->get['controllerAction'])
+            ? $this->request->get['controllerAction'] : null;
+        //die(var_dump($action));
+
+        if ($action) {
+            // fallback mapping for not-updated modules
+            $method = 'messages' === $action ? 'sms' : $action;
+        } else {
+            $method = 'settings'; // fallback to settings page
+        }
+
+        $this->$method();
     }
 
     public function settings() {
@@ -38,7 +70,7 @@ class ControllerExtensionModuleSms77Api extends Controller {
         $data = $this->_commonData('settings');
 
         if ('POST' === $this->request->server['REQUEST_METHOD']) {
-            if ($this->user->hasPermission('modify', 'extension/module/sms77_api')) {
+            if ($this->hasPermission()) {
                 if ($data['settings'] === $this->request->post) {
                     $this->error['unchanged'] = $this->language->get('error_unchanged');
                 } else {
@@ -48,30 +80,34 @@ class ControllerExtensionModuleSms77Api extends Controller {
                         $this->error['key'] = $this->language->get('error_key');
                     }
 
-                    $this->model_setting_setting->editSetting('sms77_api', $this->request->post);
+                    $this->model_setting_setting->editSetting(
+                        self::MODULE_KEY, $this->request->post);
 
-                    $this->session->data['success'] = $this->language->get('text_settings_updated');
+                    $this->session->data['success']
+                        = $this->language->get('text_settings_updated');
                 }
             } else {
                 $this->error['warning'] = $this->language->get('error_permission');
             }
         }
 
-        $this->_toError(array_merge(self::$commonFields, ['key', 'unchanged',]), $data);
+        $this->_toError(array_merge($this->_commonFields, ['key', 'unchanged',]), $data);
 
         $data['settings'] = $this->_getSettings();
 
-        $this->response->setOutput($this->load->view('extension/module/sms77_api_settings', $data));
+        $this->response->setOutput(
+            $this->load->view(self::EXT_MODULE_BASE . 'sms77_api_settings', $data));
     }
 
     private function _commonData($controllerAction) {
         $userToken = $this->session->data['user_token'];
 
-        $data['action'] = $this->url->link('extension/module/sms77_api',
+        $data['action'] = $this->url->link(self::MODULE_DIR,
             "user_token={$userToken}&controllerAction=$controllerAction", true);
         $data['breadcrumbs'] = [
             [
-                'href' => $this->url->link('common/dashboard', "user_token={$userToken}", true),
+                'href' => $this->url->link(
+                    'common/dashboard', "user_token={$userToken}", true),
                 'text' => $this->language->get('text_home'),
             ],
             [
@@ -80,8 +116,9 @@ class ControllerExtensionModuleSms77Api extends Controller {
                 'text' => $this->language->get('text_extension'),
             ],
             [
-                'href' => $this->url->link('extension/module/sms77_api',
-                    "user_token={$userToken}&action=$controllerAction", true), //TODO change to controllerAction ?!?!?
+                'href' => $this->url->link(self::MODULE_DIR,
+                    //TODO change to controllerAction ?!?!
+                    "user_token={$userToken}&action=$controllerAction", true),
                 'text' => $this->language->get("heading_$controllerAction"),
             ],
         ];
@@ -91,9 +128,13 @@ class ControllerExtensionModuleSms77Api extends Controller {
         $data['controllerAction'] = $controllerAction;
         $data['footer'] = $this->load->controller('common/footer');
         $data['header'] = $this->load->controller('common/header');
-        $data['settings'] = $this->model_setting_setting->getSetting('sms77_api');
+        $data['settings'] = $this->model_setting_setting->getSetting(self::MODULE_KEY);
 
         return $data;
+    }
+
+    private function hasPermission() {
+        return $this->user->hasPermission('modify', self::MODULE_DIR);
     }
 
     private function _postEqualsStored($key, array $settings) {
@@ -103,7 +144,7 @@ class ControllerExtensionModuleSms77Api extends Controller {
 
     private function _apiCall($endpoint, array $data = []) {
         $merge = [
-            'sendWith' => 'OpenCart',
+            'sentWith' => 'OpenCart',
         ];
 
         if (!isset($data['p'])) {
@@ -118,7 +159,7 @@ class ControllerExtensionModuleSms77Api extends Controller {
     }
 
     private function _getSettings() {
-        $settings = $this->model_setting_setting->getSetting('sms77_api');
+        $settings = $this->model_setting_setting->getSetting(self::MODULE_KEY);
 
         if (!array_key_exists('sms77_api_from', $settings)) {
             $settings['sms77_api_from'] = $this->config->get('config_name');
@@ -129,23 +170,32 @@ class ControllerExtensionModuleSms77Api extends Controller {
 
     private function _toError(array $fields, array &$data) {
         foreach ($fields as $field) {
-            $data["error_$field"] = isset($this->error[$field]) ? $this->error[$field] : '';
+            $data["error_$field"]
+                = isset($this->error[$field]) ? $this->error[$field] : '';
         }
 
         return $data;
     }
 
-    public function messages() {
-        $this->load->model('extension/module/sms77_api_message');
+    public function voice() {
+        $this->_action('sms77_api_voice', 'sms77_api_voices', '_sendVoice', 'heading_voices',
+            ['from'], false);
+    }
+
+    private function _action($module, $view, $dispatchMethod, $title, array $fields, $counter) {
+        $this->load->model(self::EXT_MODULE_BASE . $module);
         $this->load->model('customer/customer');
         $this->load->model('customer/customer_group');
-        $this->document->setTitle($this->language->get('heading_messages'));
-        $this->document->addScript('https://unpkg.com/@sms77.io/counter@1.2.0/dist/index.js');
-        $this->document->addScript("//{$_SERVER['HTTP_HOST']}/admin/view/javascript/sms77_api.js");
+        $this->document->setTitle($this->language->get($title));
+        if ($counter) {
+            $this->document->addScript('https://unpkg.com/@sms77.io/counter/dist/index.js');
+        }
+        $this->document->addScript(
+            "//{$_SERVER['HTTP_HOST']}/admin/view/javascript/sms77_api.js");
 
         if ('POST' === $this->request->server['REQUEST_METHOD']) {
-            if ($this->user->hasPermission('modify', 'extension/module/sms77_api')) {
-                $this->_sms();
+            if ($this->hasPermission()) {
+                $this->$dispatchMethod();
             } else {
                 $this->error['warning'] = $this->language->get('error_permission');
             }
@@ -153,102 +203,120 @@ class ControllerExtensionModuleSms77Api extends Controller {
 
         $data = array_merge($this->_commonData('messages'), [
             'customerGroups' => $this->model_customer_customer_group->getCustomerGroups(),
-            'messages' => $this->model_extension_module_sms77_api_message->getMessages(),
+            'messages' => $this->{"model_extension_module_$module"}->getMessages(),
         ]);
 
-        $this->_toError(array_merge(self::$commonFields, ['delay', 'text', 'to',]), $data);
+        $this->_toError(array_merge(['text', 'to'], $fields), $data);
 
-        $this->response->setOutput($this->load->view('extension/module/sms77_api_messages', $data));
+        $this->response->setOutput($this->load->view(
+            self::EXT_MODULE_BASE . $view, $data));
     }
 
-    private function _sms() {
+    public function sms() {
+        $this->_action('sms77_api_message', 'sms77_api_messages', '_sendSms',
+            'heading_smses', array_merge($this->_commonFields, ['delay']), true);
+    }
+
+    public function install() {
+        $this->load->model('setting/module');
+        $this->load->model('setting/setting');
+        $this->load->model(self::EXT_MODULE_BASE . 'sms77_api_message');
+
+        $this->model_extension_module_sms77_api_message->install();
+
+        $this->model_setting_module->addModule(self::MODULE_KEY, $this->_defaultSettings);
+
+        $this->model_setting_setting->editSetting(self::MODULE_KEY,
+            ['sms77_api_status' => 1]); //TODO prefix with module_ ?!?!
+    }
+
+    public function uninstall() {
+        $this->load->model('setting/setting');
+        $this->load->model(self::EXT_MODULE_BASE . 'sms77_api_message');
+
+        $this->model_setting_setting->deleteSetting(self::MODULE_KEY);
+
+        $this->model_extension_module_sms77_api_message->uninstall();
+    }
+
+    private function _sendVoice() {
+        $this->_sendMessage('voice', $this->model_extension_module_sms77_api_voice, []);
+    }
+
+    private function _sendMessage($endpoint, $model, array $cfg) {
+        try {
+            $a = $this->_messagePreCommons();
+        } catch (Exception $e) {
+            return;
+        }
+
+        $this->_sendMessageCommons(
+            $a['requests'], $cfg, $a['text'], $a['to'], $model, $endpoint);
+    }
+
+    private function _messagePreCommons() {
         $requests = [];
         $text = $this->_toValue('text');
         $to = $this->_toValue('to');
-        $baseConfig = [
-            'debug' => $this->_toNumericBool('debug'),
-            'delay' => $this->_toValue('delay'),
-            'flash' => $this->_toNumericBool('flash'),
-            'foreign_id' => $this->_toValue('foreign_id'),
-            'from' => $this->_toValue('from'),
-            'label' => $this->_toValue('label'),
-            'no_reload' => $this->_toNumericBool('no_reload'),
-            'json' => 1,
-            'performance_tracking' => $this->_toNumericBool('performance_tracking'),
-            'udh' => $this->_toValue('udh'),
-        ];
         $customerGroup = array_key_exists('customerGroup', $this->request->post)
             ? (int)$this->request->post['customerGroup'] : null;
 
-        if (!utf8_strlen($text)) {
-            $this->error['text'] = $this->language->get('error_text');
+        if ('' === $text) {
+            $err = $this->language->get('error_text');
+            $this->error['text'] = $err;
+            throw new Exception($err);
         }
 
-        if (!$this->error) {
-            $placeholderKeys = ['firstname', 'lastname', 'email', 'telephone',
-                'fax', 'custom_field', 'ip', 'date_added',];
+        if ($customerGroup) {
             $isCustomizedText = preg_match_all(
-                '/{{(' . implode('|', $placeholderKeys) . ')}}/m', $text);
+                '/{{(' . implode('|', $this->_placeholderKeys) . ')}}/m', $text);
+            $customers = $this->model_customer_customer->getCustomers([
+                'filter_customer_group_id' => $customerGroup,
+                'filter_status' => 1,
+            ]);
 
-            if ($customerGroup) {
-                $customers = $this->model_customer_customer->getCustomers([
-                    'filter_customer_group_id' => $customerGroup,
-                    'filter_status' => 1,
-                ]);
+            if (count($customers)) {
+                $customerPhones = [];
+                $words = explode(' ', $text);
 
-                if (count($customers)) {
-                    $customerPhones = [];
-                    $words = explode(' ', $text);
+                foreach ($customers as $customer) {
+                    if (!utf8_strlen($customer['telephone'])) {
+                        continue;
+                    }
 
-                    foreach ($customers as $customer) {
-                        if (!utf8_strlen($customer['telephone'])) {
-                            continue;
-                        }
+                    if ($isCustomizedText) {
+                        $customText = $text;
 
-                        if ($isCustomizedText) {
-                            $customText = $text;
+                        foreach ($words as $word) {
+                            if (self::_isValidPlaceholder($word)) {
+                                $prop = str_replace(['{{', '}}'], '', $word);
 
-                            foreach ($words as $word) {
-                                if (self::_isValidPlaceholder($word)) {
-                                    $prop = str_replace(['{{', '}}'], '', $word);
-
-                                    if (in_array($prop, $placeholderKeys, false)) {
-                                        $customText = preg_replace("/$word/m", $customer[$prop], $customText);
-                                    }
+                                if (in_array($prop, $this->_placeholderKeys, false)) {
+                                    $customText = preg_replace(
+                                        "/$word/m", $customer[$prop], $customText);
                                 }
                             }
-
-                            $requests[] = ['text' => $customText, 'to' => $customer['telephone'],];
-                        } else {
-                            $customerPhones[] = $customer['telephone'];
                         }
-                    }
 
-                    if (!$isCustomizedText) {
-                        $to = implode(',', array_unique($customerPhones));
+                        $requests[] =
+                            ['text' => $customText, 'to' => $customer['telephone'],];
+                    } else {
+                        $customerPhones[] = $customer['telephone'];
                     }
                 }
-            }
 
-            foreach (count($requests) ? $requests : [['text' => $text, 'to' => $to,]] as $request) {
-                $this->model_extension_module_sms77_api_message->setMessageResponse(
-                    $this->model_extension_module_sms77_api_message->addMessage($this->request->post),
-                    $this->_apiCall('sms', array_merge($request, $baseConfig)));
+                if (!$isCustomizedText) {
+                    $to = implode(',', array_unique($customerPhones));
+                }
             }
-
-            $this->session->data['success'] = $this->language->get('text_success');
         }
+
+        return compact('requests', 'text', 'to');
     }
 
     private function _toValue($key) {
         return array_key_exists($key, $this->request->post)
             ? $this->request->post[$key] : null;
-    }
-
-    private function _toNumericBool($key) {
-        $value = (bool)$this->_toValue($key);
-
-        return $value ? 1 : 0;
     }
 
     private static function _isValidPlaceholder($word) {
@@ -265,24 +333,36 @@ class ControllerExtensionModuleSms77Api extends Controller {
         return $startsWith($word, '{{') && $endsWith($word, '}}');
     }
 
-    public function install() {
-        $this->load->model('setting/module');
-        $this->load->model('setting/setting');
-        $this->load->model('extension/module/sms77_api_message');
+    private function _sendMessageCommons(
+        array $requests, array $cfg, $text, $to, $model, $endpoint) {
+        $cfg['from'] = $this->_toValue('from');
 
-        $this->model_extension_module_sms77_api_message->install();
+        $requests = count($requests) ? $requests : [compact('text', 'to')];
+        foreach ($requests as $req) {
+            $model->setMessageResponse($model->addMessage($this->request->post),
+                $this->_apiCall($endpoint, array_merge($req, $cfg)));
+        }
 
-        $this->model_setting_module->addModule('sms77_api', self::$defaultSettings);
-
-        $this->model_setting_setting->editSetting('sms77_api', ['sms77_api_status' => 1]); //TODO? prefix with module_
+        $this->session->data['success'] = $this->language->get('text_success');
     }
 
-    public function uninstall() {
-        $this->load->model('setting/setting');
-        $this->load->model('extension/module/sms77_api_message');
+    private function _sendSms() {
+        $this->_sendMessage('sms', $this->model_extension_module_sms77_api_message, [
+            'debug' => $this->_toNumericBool('debug'),
+            'delay' => $this->_toValue('delay'),
+            'flash' => $this->_toNumericBool('flash'),
+            'foreign_id' => $this->_toValue('foreign_id'),
+            'label' => $this->_toValue('label'),
+            'no_reload' => $this->_toNumericBool('no_reload'),
+            'json' => 1,
+            'performance_tracking' => $this->_toNumericBool('performance_tracking'),
+            'udh' => $this->_toValue('udh'),
+        ]);
+    }
 
-        $this->model_setting_setting->deleteSetting('sms77_api');
+    private function _toNumericBool($key) {
+        $value = (bool)$this->_toValue($key);
 
-        $this->model_extension_module_sms77_api_message->uninstall();
+        return $value ? 1 : 0;
     }
 }

@@ -1,23 +1,29 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const $customerGroup = document.getElementById('input-customerGroup');
-    const $to = document.getElementById('input-to');
-    const $submit = document.querySelector('button[form="form-module"]');
-    const $write = $submit.previousElementSibling;
+document.addEventListener('DOMContentLoaded', function () {
+    var $form = document.querySelector('form');
+    var $customerGroup = document.getElementById('input-customerGroup');
+    var $to = document.getElementById('input-to');
+    var $submit = document.querySelector('button[form="form-module"]');
+    var $write = document.querySelector('button[data-target="#writeMessage"]');
 
-    $('#writeSms').on('shown.bs.collapse', () => {
+    $('#writeMessage').on('shown.bs.collapse', function () {
         $submit.style.display = 'inline-block';
 
         $write.style.display = 'none';
-
-        window.Sms77Counter.setStyle(document.querySelector('form textarea'));
     });
 
-    $submit.addEventListener('click', () => {
+    $submit.addEventListener('click', function () {
         $submit.style.display = 'none';
 
         $write.style.display = 'inline-block';
     });
 
-    $customerGroup.addEventListener('change',
-        () => $to.disabled = '' !== $customerGroup.value);
+    $customerGroup.addEventListener('change', function () {
+        $to.disabled = '' !== $customerGroup.value;
+    });
+
+    $form.addEventListener('submit', function () {
+        if ('' !== $to.value) {
+            $customerGroup.value = '';
+        }
+    });
 });

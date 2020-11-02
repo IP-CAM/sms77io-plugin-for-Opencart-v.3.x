@@ -12,6 +12,7 @@
             <add position="after">
                 <![CDATA[
                     $_['text_sms77_api_send'] = 'Send SMS';
+                    $_['text_sms77_api_send_voice'] = 'Send Voice';
                     $_['text_sms77_api_settings']  = 'Settings';
                 ]]>
             </add>
@@ -24,8 +25,12 @@
                 $marketing[] = [
                     'children' => [
                         [
-                            'href'     => $this->url->link('extension/module/sms77_api', 'user_token=' . $this->session->data['user_token'] . '&controllerAction=messages', true),
+                            'href'     => $this->url->link('extension/module/sms77_api', 'user_token=' . $this->session->data['user_token'] . '&controllerAction=sms', true),
                             'name'	   => $this->language->get('text_sms77_api_send'),
+                        ],
+                        [
+                            'href'     => $this->url->link('extension/module/sms77_api', 'user_token=' . $this->session->data['user_token'] . '&controllerAction=voice', true),
+                            'name'	   => $this->language->get('text_sms77_api_send_voice'),
                         ],
                         [
                             'href'     => $this->url->link('extension/module/sms77_api', 'user_token=' . $this->session->data['user_token'] . '&controllerAction=settings', true),

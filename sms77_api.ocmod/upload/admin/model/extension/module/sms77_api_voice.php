@@ -1,17 +1,12 @@
 <?php
 
-class ModelExtensionModuleSms77ApiMessage extends Model {
-    const _TABLE = 'sms77_api_message';
-
-    private function _toString($data) {
-        return is_string($data) ? $data : json_encode($data);
-    }
+class ModelExtensionModuleSms77ApiVoice extends Model {
+    const _TABLE = 'sms77_api_voice';
 
     public function addMessage($config) {
         $config = $this->_toString($config);
 
-        $this->db->query("INSERT INTO " . DB_PREFIX
-            . "sms77_api_message SET config = '" . $config . "'");
+        $this->db->query("INSERT INTO " . DB_PREFIX . "sms77_api_voice SET config = '" . $config . "'");
 
         $lastId = $this->db->getLastId();
 
@@ -20,18 +15,22 @@ class ModelExtensionModuleSms77ApiMessage extends Model {
         return $lastId;
     }
 
+    private function _toString($data) {
+        return is_string($data) ? $data : json_encode($data);
+    }
+
     public function setMessageResponse($id, $response) {
         $response = $this->_toString($response);
 
         $this->db->query("UPDATE " . DB_PREFIX
-            . "sms77_api_message SET response = '$response' WHERE id = '"
+            . "sms77_api_voice SET response = '$response' WHERE id = '"
             . (int)$id . "'");
 
         $this->cache->delete(self::_TABLE);
     }
 
     public function deleteMessage($id) {
-        $this->db->query("DELETE FROM `" . DB_PREFIX . "sms77_api_message` WHERE id = '"
+        $this->db->query("DELETE FROM `" . DB_PREFIX . "sms77_api_voice` WHERE id = '"
             . (int)$id . "'");
 
         $this->cache->delete(self::_TABLE);
@@ -39,14 +38,14 @@ class ModelExtensionModuleSms77ApiMessage extends Model {
 
     public function getMessage($id) {
         $query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX
-            . "sms77_api_message WHERE id = '" . (int)$id . "'");
+            . "sms77_api_voice WHERE id = '" . (int)$id . "'");
 
         return $query->row;
     }
 
     public function getMessages($data = []) {
         if ($data) {
-            $sql = "SELECT * FROM " . DB_PREFIX . "sms77_api_message";
+            $sql = "SELECT * FROM " . DB_PREFIX . "sms77_api_voice";
 
             if (isset($data['sort']) && in_array($data['sort'], [
                     'id.title',
@@ -83,7 +82,7 @@ class ModelExtensionModuleSms77ApiMessage extends Model {
         $message = $this->cache->get(self::_TABLE . ".$langId");
 
         if (!$message) {
-            $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "sms77_api_message");
+            $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "sms77_api_voice");
 
             $message = $query->rows;
 
@@ -95,12 +94,12 @@ class ModelExtensionModuleSms77ApiMessage extends Model {
 
     public function getTotalMessages() {
         return $this->db->query("SELECT COUNT(*) AS total FROM "
-            . DB_PREFIX . "sms77_api_message")->row['total'];
+            . DB_PREFIX . "sms77_api_voice")->row['total'];
     }
 
     public function install() {
         $this->db->query("CREATE TABLE IF NOT EXISTS `"
-            . DB_PREFIX . "sms77_api_message` (
+            . DB_PREFIX . "sms77_api_voice` (
 		  `id` INT(11) NOT NULL AUTO_INCREMENT,
 		  `config` TEXT NOT NULL,
           `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -110,6 +109,6 @@ class ModelExtensionModuleSms77ApiMessage extends Model {
     }
 
     public function uninstall() {
-        $this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "sms77_api_message`");
+        $this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "sms77_api_voice`");
     }
 }

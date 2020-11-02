@@ -1,267 +1,160 @@
-{{ header }} {{ column_left }}
+{% extends 'extension/module/sms77_api_message.twig' %}
 
-<div id='content'>
-    <div class='page-header'>
-        <div class='container-fluid'>
-            <div class='pull-right'>
-                <button class='btn btn-success' data-toggle='collapse'
-                        data-target='#writeSms' aria-expanded='false' aria-controls='writeSms'>
-                    <i class='fa fa-plus'></i>
-                </button>
+{% set _heading = heading_smses %}
 
-                <button style='display: none;' type='submit' form='form-module'
-                        data-toggle='tooltip'
-                        title='{{ button_save }}' class='btn btn-primary'><i class='fa fa-save'></i>
-                </button>
+{% block form %}
+    <div class='form-group'>
+        <label class='col-sm-2 control-label' for='input-label'>
+            {{ setting_label }}</label>
 
-                <a href='{{ cancel }}' data-toggle='tooltip' title='{{ button_cancel }}'
-                   class='btn btn-default'>
-                    <i class='fa fa-reply'></i>
-                </a>
-            </div>
+        <div class='col-sm-10'>
+            <input
+                    class='form-control'
+                    id='input-label'
+                    name='label'
+                    pattern='[A-Z|a-z|0-9|.|\-|_|@]+'
+                    value='{{ settings.sms77_api_label }}'
+            />
 
-            <h1>{{ heading_messages }}</h1>
-
-            <ul class='breadcrumb'>
-                {% for breadcrumb in breadcrumbs %}
-                    <li><a href='{{ breadcrumb.href }}'>{{ breadcrumb.text }}</a></li>
-                {% endfor %}
-            </ul>
-
-            {% if error_warning %}
-                <div class='alert alert-danger alert-dismissible'><i
-                            class='fa fa-exclamation-circle'></i> {{ error_warning }}
-                    <button type='button' class='close' data-dismiss='alert'>&times;</button>
-                </div>
+            {% if error_label %}
+                <div class='text-danger'>{{ error_label }}</div>
             {% endif %}
         </div>
     </div>
 
-    <div class='container-fluid collapse' id="writeSms">
-        <div class='panel panel-default'>
-            <div class='panel-heading'>
-                <h2 class='panel-title'><i class='fa fa-pencil'></i> {{ text_send_sms }}</h2>
-            </div>
+    <div class='form-group'>
+        <label class='col-sm-2 control-label' for='input-foreign_id'>
+            {{ setting_foreign_id }}
+        </label>
 
-            <div class='panel-body'>
-                <form action='{{ action }}' method='post' enctype='multipart/form-data'
-                      id='form-module' class='form-horizontal'>
-                    <div class="form-group">
-                        <label class="control-label col-sm-2" for="input-customerGroup">
-                            {{ filter_customerGroup }}</label>
+        <div class='col-sm-10'>
+            <input
+                    class='form-control'
+                    id='input-foreign_id'
+                    name='foreign_id'
+                    pattern='[A-Z|a-z|0-9|.|\-|_|@]+'
+                    value='{{ settings.sms77_api_foreign_id }}'
+            />
 
-                        <div class="col-sm-10">
-                            <select class="form-control" id='input-customerGroup'
-                                    name='customerGroup'>
-                                <option selected value></option>
-
-                                {% for customerGroup in customerGroups %}
-                                    <option value='{{ customerGroup.customer_group_id }}'>
-                                        {{ customerGroup.name }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class='form-group'>
-                        <label class='col-sm-2 control-label'
-                               for='input-to'>{{ setting_to }}</label>
-                        <div class='col-sm-10'>
-                            <input name='to' value='{{ settings.sms77_api_to }}'
-                                   class='form-control'
-                                   id='input-to'/>
-
-                            {% if error_to %}
-                                <div class='text-danger'>{{ error_to }}</div>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <div class='form-group'>
-                        <label class='col-sm-2 control-label' for='input-from'>
-                            {{ setting_from }}</label>
-
-                        <div class='col-sm-10'>
-                            <input name='from' value='{{ settings.sms77_api_from }}'
-                                   class='form-control'
-                                   id='input-from'/>
-
-                            {% if error_from %}
-                                <div class='text-danger'>{{ error_from }}</div>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <div class='form-group'>
-                        <label class='col-sm-2 control-label' for='input-label'>
-                            {{ setting_label }}</label>
-
-                        <div class='col-sm-10'>
-                            <input pattern='[A-Z|a-z|0-9|.|\-|_|@]+' name='label'
-                                   value='{{ settings.sms77_api_label }}'
-                                   class='form-control' id='input-label'/>
-
-                            {% if error_label %}
-                                <div class='text-danger'>{{ error_label }}</div>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <div class='form-group'>
-                        <label class='col-sm-2 control-label' for='input-foreign_id'>
-                            {{ setting_foreign_id }}
-                        </label>
-
-                        <div class='col-sm-10'>
-                            <input pattern='[A-Z|a-z|0-9|.|\-|_|@]+' name='foreign_id'
-                                   value='{{ settings.sms77_api_foreign_id }}'
-                                   class='form-control' id='input-foreign_id'/>
-
-                            {% if error_foreign_id %}
-                                <div class='text-danger'>{{ error_foreign_id }}</div>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <div class='form-group'>
-                        <label class='col-sm-2 control-label' for='input-delay'>{{ setting_delay }}
-                        </label>
-
-                        <div class='col-sm-10'>
-                            <input name='delay' value='{{ settings.sms77_api_delay }}'
-                                   class='form-control' id='input-delay'/>
-
-                            {% if error_delay %}
-                                <div class='text-danger'>{{ error_delay }}</div>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <div class='form-group'>
-                        <label class='col-sm-2 control-label' for='input-udh'>{{ setting_udh }}
-                        </label>
-
-                        <div class='col-sm-10'>
-                            <input name='udh' value='{{ settings.sms77_api_udh }}'
-                                   class='form-control' id='input-udh'/>
-
-                            {% if error_udh %}
-                                <div class='text-danger'>{{ error_udh }}</div>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <div class='form-group'>
-                        <label class='col-sm-2 control-label' for='input-debug'>{{ setting_debug }}
-                        </label>
-
-                        <div class='col-sm-10'>
-                            <input type='checkbox' name='debug'
-                                   {% if settings.sms77_api_debug %}checked{% endif %}
-                                   class='form-control' id='input-debug'/>
-
-                            {% if error_debug %}
-                                <div class='text-danger'>{{ error_debug }}</div>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <div class='form-group'>
-                        <label class='col-sm-2 control-label'
-                               for='input-no_reload'>{{ setting_no_reload }}</label>
-
-                        <div class='col-sm-10'>
-                            <input type='checkbox' name='no_reload'
-                                   {% if settings.sms77_api_no_reload %}checked{% endif %}
-                                   class='form-control' id='input-no_reload'/>
-
-                            {% if error_no_reload %}
-                                <div class='text-danger'>{{ error_no_reload }}</div>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <div class='form-group'>
-                        <label class='col-sm-2 control-label'
-                               for='input-flash'>{{ setting_flash }}</label>
-
-                        <div class='col-sm-10'>
-                            <input type='checkbox' name='flash'
-                                   {% if settings.sms77_api_flash %}checked{% endif %}
-                                   class='form-control' id='input-flash'/>
-
-                            {% if error_flash %}
-                                <div class='text-danger'>{{ error_flash }}</div>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <div class='form-group'>
-                        <label class='col-sm-2 control-label'
-                               for='input-performance_tracking'>{{ setting_performance_tracking }}</label>
-
-                        <div class='col-sm-10'>
-                            <input type='checkbox' name='performance_tracking'
-                                   {% if settings.sms77_api_performance_tracking %}checked{% endif %}
-                                   class='form-control' id='input-performance_tracking'/>
-
-                            {% if error_performance_tracking %}
-                                <div class='text-danger'>{{ error_performance_tracking }}</div>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <div class='form-group'>
-                        <label class='col-sm-2 control-label'
-                               for='input-text'>{{ setting_text }}</label>
-                        <div class='col-sm-10'>
-                            <textarea data-sms77-sms name='text'
-                                      placeholder='{{ placeholder_text }}'
-                                      id='input-text'
-                                      class='form-control'
-                                      required>{{ settings.sms77_api_text }}</textarea>
-
-                            {% if error_text %}
-                                <div class='text-danger'>{{ error_text }}</div>
-                            {% endif %}
-                        </div>
-                    </div>
-                </form>
-            </div>
+            {% if error_foreign_id %}
+                <div class='text-danger'>{{ error_foreign_id }}</div>
+            {% endif %}
         </div>
     </div>
 
-    <div class='container-fluid'>
-        <div class='panel panel-default'>
-            <div class='panel-heading'>
-                <h2 class='panel-title'><i class='fa fa-envelope'></i> {{ text_msg_history }}</h2>
-            </div>
+    <div class='form-group'>
+        <label class='col-sm-2 control-label'
+               for='input-delay'>{{ setting_delay }}
+        </label>
 
-            <div class='panel-body'>
-                <table class='table table-responsive table-striped'>
-                    <caption>{{ caption_msg_history }}</caption>
+        <div class='col-sm-10'>
+            <input
+                    class='form-control'
+                    id='input-delay'
+                    name='delay'
+                    value='{{ settings.sms77_api_delay }}'
+            />
 
-                    <thead>
-                    <tr>
-                        <th>{{ text_created }}</th>
-                        <th>{{ text_config }}</th>
-                        <th>{{ text_response }}</th>
-                    </tr>
-                    </thead>
-
-                    <tbody>
-                    {% for message in messages %}
-                        <tr>
-                            <td>{{ message.created }}</td>
-                            <td>{{ message.config }}</td>
-                            <td>{{ message.response }}</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+            {% if error_delay %}
+                <div class='text-danger'>{{ error_delay }}</div>
+            {% endif %}
         </div>
     </div>
-</div>
 
-{{ footer }}
+    <div class='form-group'>
+        <label class='col-sm-2 control-label'
+               for='input-udh'>{{ setting_udh }}
+        </label>
+
+        <div class='col-sm-10'>
+            <input
+                    class='form-control'
+                    id='input-udh'
+                    name='udh'
+                    value='{{ settings.sms77_api_udh }}'
+            />
+
+            {% if error_udh %}
+                <div class='text-danger'>{{ error_udh }}</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class='form-group'>
+        <label class='col-sm-2 control-label'
+               for='input-debug'>{{ setting_debug }}
+        </label>
+
+        <div class='col-sm-10'>
+            <input
+                    {% if settings.sms77_api_debug %}checked{% endif %}
+                    class='form-control'
+                    id='input-debug'
+                    name='debug'
+                    type='checkbox'
+            />
+
+            {% if error_debug %}
+                <div class='text-danger'>{{ error_debug }}</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class='form-group'>
+        <label class='col-sm-2 control-label'
+               for='input-no_reload'>{{ setting_no_reload }}</label>
+
+        <div class='col-sm-10'>
+            <input
+                    {% if settings.sms77_api_no_reload %}checked{% endif %}
+                    class='form-control'
+                    id='input-no_reload'
+                    name='no_reload'
+                    type='checkbox'
+            />
+
+            {% if error_no_reload %}
+                <div class='text-danger'>{{ error_no_reload }}</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class='form-group'>
+        <label class='col-sm-2 control-label'
+               for='input-flash'>{{ setting_flash }}</label>
+
+        <div class='col-sm-10'>
+            <input
+                    {% if settings.sms77_api_flash %}checked{% endif %}
+                    class='form-control'
+                    id='input-flash'
+                    name='flash'
+                    type='checkbox'
+            />
+
+            {% if error_flash %}
+                <div class='text-danger'>{{ error_flash }}</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class='form-group'>
+        <label class='col-sm-2 control-label'
+               for='input-performance_tracking'>{{ setting_performance_tracking }}</label>
+
+        <div class='col-sm-10'>
+            <input
+                    {% if settings.sms77_api_performance_tracking %}checked{% endif %}
+                    class='form-control'
+                    id='input-performance_tracking'
+                    name='performance_tracking'
+                    type='checkbox'
+
+            />
+
+            {% if error_performance_tracking %}
+                <div class='text-danger'>{{ error_performance_tracking }}</div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

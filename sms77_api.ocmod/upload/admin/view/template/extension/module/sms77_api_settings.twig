@@ -4,12 +4,22 @@
     <div class='page-header'>
         <div class='container-fluid'>
             <div class='pull-right'>
-                <button type='submit' form='form-module' data-toggle='tooltip'
-                        title='{{ button_save }}' class='btn btn-primary'><i class='fa fa-save'></i>
+                <button
+                        class='btn btn-primary'
+                        data-toggle='tooltip'
+                        form='form-module'
+                        title='{{ button_save }}'
+                        type='submit'
+                >
+                    <i class='fa fa-save'></i>
                 </button>
 
-                <a href='{{ cancel }}' data-toggle='tooltip' title='{{ button_cancel }}'
-                   class='btn btn-default'>
+                <a
+                        class='btn btn-default'
+                        data-toggle='tooltip'
+                        href='{{ cancel }}'
+                        title='{{ button_cancel }}'
+                >
                     <i class='fa fa-reply'></i>
                 </a>
             </div>
@@ -26,27 +36,34 @@
 
     <div class='container-fluid'>
         {% if error_warning %}
-            <div class='alert alert-warning alert-dismissible'><i
-                        class='fa fa-exclamation-circle'></i> {{ error_warning }}
+            <div class='alert alert-warning alert-dismissible'>
+                <i class='fa fa-exclamation-circle'></i> {{ error_warning }}
                 <button type='button' class='close' data-dismiss='alert'>&times;</button>
             </div>
         {% endif %}
 
         {% if error_unchanged %}
-            <div class='alert alert-info alert-dismissible'><i
-                        class='fa fa-exclamation-circle'></i> {{ error_unchanged }}
+            <div class='alert alert-info alert-dismissible'>
+                <i class='fa fa-exclamation-circle'></i> {{ error_unchanged }}
                 <button type='button' class='close' data-dismiss='alert'>&times;</button>
             </div>
         {% endif %}
 
         <div class='panel panel-default'>
             <div class='panel-heading'>
-                <h3 class='panel-title'><i class='fa fa-pencil'></i> {{ text_edit_settings }}</h3>
+                <h3 class='panel-title'>
+                    <i class='fa fa-pencil'></i> {{ text_edit_settings }}
+                </h3>
             </div>
 
             <div class='panel-body'>
-                <form action='{{ action }}' method='post' enctype='multipart/form-data'
-                      id='form-module' class='form-horizontal'>
+                <form
+                        action='{{ action }}'
+                        class='form-horizontal'
+                        enctype='multipart/form-data'
+                        id='form-module'
+                        method='post'
+                >
                     <h2>{{ text_settings_required }}</h2>
 
                     <div class='form-group'>
@@ -55,8 +72,13 @@
                         </label>
 
                         <div class='col-sm-10'>
-                            <input name='sms77_api_key' value='{{ settings.sms77_api_key }}'
-                                   class='form-control' id='input-key' required/>
+                            <input
+                                    class='form-control'
+                                    id='input-key'
+                                    name='sms77_api_key'
+                                    required
+                                    value='{{ settings.sms77_api_key }}'
+                            />
 
                             {% if error_key %}
                                 <div class='text-danger'>{{ error_key }}</div>
@@ -72,8 +94,12 @@
                         </label>
 
                         <div class='col-sm-10'>
-                            <input name='sms77_api_from' value='{{ settings.sms77_api_from }}'
-                                   class='form-control' id='input-from'/>
+                            <input
+                                    class='form-control'
+                                    id='input-from'
+                                    name='sms77_api_from'
+                                    value='{{ settings.sms77_api_from }}'
+                            />
 
                             {% if error_from %}
                                 <div class='text-danger'>{{ error_from }}</div>
@@ -87,9 +113,14 @@
                         </label>
 
                         <div class='col-sm-10'>
-                            <input pattern='[A-Z|a-z|0-9|.|\-|_|@]+' name='sms77_api_label'
-                                   value='{{ settings.sms77_api_label }}'
-                                   class='form-control' id='input-label'/>
+                            <input
+                                    class='form-control'
+                                    id='input-label'
+                                    name='sms77_api_label'
+                                    pattern='[A-Z|a-z|0-9|.|\-|_|@]+'
+                                    value='{{ settings.sms77_api_label }}'
+
+                            />
 
                             {% if error_label %}
                                 <div class='text-danger'>{{ error_label }}</div>
@@ -103,9 +134,14 @@
                         </label>
 
                         <div class='col-sm-10'>
-                            <input pattern='[A-Z|a-z|0-9|.|\-|_|@]+' name='sms77_api_foreign_id'
-                                   value='{{ settings.sms77_api_foreign_id }}'
-                                   class='form-control' id='input-foreign_id'/>
+                            <input
+                                    class='form-control'
+                                    id='input-foreign_id'
+                                    name='sms77_api_foreign_id'
+                                    pattern='[A-Z|a-z|0-9|.|\-|_|@]+'
+                                    value='{{ settings.sms77_api_foreign_id }}'
+
+                            />
 
                             {% if error_foreign_id %}
                                 <div class='text-danger'>{{ error_foreign_id }}</div>
@@ -119,8 +155,12 @@
                         </label>
 
                         <div class='col-sm-10'>
-                            <input name='sms77_api_udh' value='{{ settings.sms77_api_udh }}'
-                                   class='form-control' id='input-udh'/>
+                            <input
+                                    class='form-control'
+                                    id='input-udh'
+                                    name='sms77_api_udh'
+                                    value='{{ settings.sms77_api_udh }}'
+                            />
 
                             {% if error_udh %}
                                 <div class='text-danger'>{{ error_udh }}</div>
@@ -129,13 +169,18 @@
                     </div>
 
                     <div class='form-group'>
-                        <label class='col-sm-2 control-label' for='input-debug'>{{ setting_debug }}
+                        <label class='col-sm-2 control-label'
+                               for='input-debug'>{{ setting_debug }}
                         </label>
 
                         <div class='col-sm-10'>
-                            <input type='checkbox' name='sms77_api_debug'
-                                   {% if settings.sms77_api_debug %}checked{% endif %}
-                                   class='form-control' id='input-debug'/>
+                            <input
+                                    {% if settings.sms77_api_debug %}checked{% endif %}
+                                    class='form-control'
+                                    id='input-debug'
+                                    name='sms77_api_debug'
+                                    type='checkbox'
+                            />
 
                             {% if error_debug %}
                                 <div class='text-danger'>{{ error_debug }}</div>
@@ -148,9 +193,13 @@
                                for='input-no_reload'>{{ setting_no_reload }}</label>
 
                         <div class='col-sm-10'>
-                            <input type='checkbox' name='sms77_api_no_reload'
-                                   {% if settings.sms77_api_no_reload %}checked{% endif %}
-                                   class='form-control' id='input-no_reload'/>
+                            <input
+                                    {% if settings.sms77_api_no_reload %}checked{% endif %}
+                                    class='form-control'
+                                    name='sms77_api_no_reload'
+                                    id='input-no_reload'
+                                    type='checkbox'
+                            />
 
                             {% if error_no_reload %}
                                 <div class='text-danger'>{{ error_no_reload }}</div>
@@ -163,9 +212,14 @@
                                for='input-flash'>{{ setting_flash }}</label>
 
                         <div class='col-sm-10'>
-                            <input type='checkbox' name='sms77_api_flash'
-                                   {% if settings.sms77_api_flash %}checked{% endif %}
-                                   class='form-control' id='input-flash'/>
+                            <input
+                                    {% if settings.sms77_api_flash %}checked{% endif %}
+                                    class='form-control'
+                                    id='input-flash'
+                                    name='sms77_api_flash'
+                                    type='checkbox'
+
+                            />
 
                             {% if error_flash %}
                                 <div class='text-danger'>{{ error_flash }}</div>
@@ -174,16 +228,28 @@
                     </div>
 
                     <div class='form-group'>
-                        <label class='col-sm-2 control-label'
-                               for='input-performance_tracking'>{{ setting_performance_tracking }}</label>
+                        <label
+                                class='col-sm-2 control-label'
+                                for='input-performance_tracking'
+                        >
+                            {{ setting_performance_tracking }}
+                        </label>
 
                         <div class='col-sm-10'>
-                            <input type='checkbox' name='sms77_api_performance_tracking'
-                                   {% if settings.sms77_api_performance_tracking %}checked{% endif %}
-                                   class='form-control' id='input-performance_tracking'/>
+                            <input
+                                    {% if settings.sms77_api_performance_tracking %}
+                                        checked
+                                    {% endif %}
+                                    class='form-control'
+                                    id='input-performance_tracking'
+                                    name='sms77_api_performance_tracking'
+                                    type='checkbox'
+                            />
 
                             {% if error_performance_tracking %}
-                                <div class='text-danger'>{{ error_performance_tracking }}</div>
+                                <div class='text-danger'>
+                                    {{ error_performance_tracking }}
+                                </div>
                             {% endif %}
                         </div>
                     </div>
