@@ -24,7 +24,7 @@ $_['heading_voices'] = 'Voice messages - sms77io';
 $_['heading_title'] = 'Sms77.io API';
 
 $_['placeholder_text'] = 'Hi {{firstname}} {{lastname}} ! Is ur email {{email}} correct?'
- . ' If given we will contact you on your fax {{fax}} in the future so please recheck.';
+ . ' We will contact you via it in the future so please recheck.';
 
 $_['setting_key'] = 'API Key';
 $_['setting_debug'] = 'Debug';

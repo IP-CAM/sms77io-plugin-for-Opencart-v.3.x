@@ -52,7 +52,6 @@ class ControllerExtensionModuleSms77Api extends Controller {
 
         $action = isset($this->request->get['controllerAction'])
             ? $this->request->get['controllerAction'] : null;
-        //die(var_dump($action));
 
         if ($action) {
             // fallback mapping for not-updated modules

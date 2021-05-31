@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <modification>
     <name>Admin menu links</name>
-    <version>3.0</version>
+    <version>3.1</version>
     <author>sms77 e.K.</author>
     <link>https://www.sms77.io</link>
     <code>sms77_api_add_admin_menu_entries</code>
