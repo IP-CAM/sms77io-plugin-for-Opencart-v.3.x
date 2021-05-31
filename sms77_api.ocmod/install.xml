@@ -3,7 +3,7 @@
     <name>Admin menu links</name>
     <version>3.0</version>
     <author>sms77 e.K.</author>
-    <link>http://sms77.io</link>
+    <link>https://www.sms77.io</link>
     <code>sms77_api_add_admin_menu_entries</code>
     <description>Add extension links to admin menu</description>
     <file path="admin/language/en-gb/common/column_left.php">
