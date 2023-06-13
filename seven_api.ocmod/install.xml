@@ -2,17 +2,17 @@
 <modification>
     <name>Admin menu links</name>
     <version>3.0</version>
-    <author>sms77 e.K.</author>
-    <link>http://sms77.io</link>
-    <code>sms77_api_add_admin_menu_entries</code>
+    <author>seven communications GmbH &amp; Co. KG</author>
+    <link>https://www.seven.io</link>
+    <code>seven_api_add_admin_menu_entries</code>
     <description>Add extension links to admin menu</description>
     <file path="admin/language/en-gb/common/column_left.php">
         <operation>
             <search><![CDATA[$_['text_other_status']]]></search>
             <add position="after">
                 <![CDATA[
-                    $_['text_sms77_api_send'] = 'Send SMS';
-                    $_['text_sms77_api_settings']  = 'Settings';
+                    $_['text_seven_api_send'] = 'Send SMS';
+                    $_['text_seven_api_settings']  = 'Settings';
                 ]]>
             </add>
         </operation>
@@ -24,16 +24,16 @@
                 $marketing[] = [
                     'children' => [
                         [
-                            'href'     => $this->url->link('extension/module/sms77_api', 'user_token=' . $this->session->data['user_token'] . '&controllerAction=messages', true),
-                            'name'	   => $this->language->get('text_sms77_api_send'),
+                            'href'     => $this->url->link('extension/module/seven_api', 'user_token=' . $this->session->data['user_token'] . '&controllerAction=messages', true),
+                            'name'	   => $this->language->get('text_seven_api_send'),
                         ],
                         [
-                            'href'     => $this->url->link('extension/module/sms77_api', 'user_token=' . $this->session->data['user_token'] . '&controllerAction=settings', true),
-                            'name'	   => $this->language->get('text_sms77_api_settings'),
+                            'href'     => $this->url->link('extension/module/seven_api', 'user_token=' . $this->session->data['user_token'] . '&controllerAction=settings', true),
+                            'name'	   => $this->language->get('text_seven_api_settings'),
                         ]
                     ],
                     'href'     => '',
-                    'name'	   => "Sms77.io API",
+                    'name'	   => "seven.io API",
                 ];
             ]]></add>
         </operation>

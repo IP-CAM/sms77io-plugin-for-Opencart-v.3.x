@@ -1,6 +1,6 @@
 <?php
 
-class ModelExtensionModuleSms77ApiMessage extends Model {
+class ModelExtensionModuleSevenApiMessage extends Model {
     private function _toString($data) {
         if (!is_string($data)) {
             $data = json_encode($data);
@@ -12,11 +12,11 @@ class ModelExtensionModuleSms77ApiMessage extends Model {
     public function addMessage($config) {
         $config = $this->_toString($config);
 
-        $this->db->query("INSERT INTO " . DB_PREFIX . "sms77_api_message SET config = '" . $config . "'");
+        $this->db->query("INSERT INTO " . DB_PREFIX . "seven_api_message SET config = '" . $config . "'");
 
         $lastId = $this->db->getLastId();
 
-        $this->cache->delete('sms77_api_message');
+        $this->cache->delete('seven_api_message');
 
         return $lastId;
     }
@@ -24,26 +24,26 @@ class ModelExtensionModuleSms77ApiMessage extends Model {
     public function setMessageResponse($id, $response) {
         $response = $this->_toString($response);
 
-        $this->db->query("UPDATE " . DB_PREFIX . "sms77_api_message SET response = '$response' WHERE id = '" . (int)$id . "'");
+        $this->db->query("UPDATE " . DB_PREFIX . "seven_api_message SET response = '$response' WHERE id = '" . (int)$id . "'");
 
-        $this->cache->delete('sms77_api_message');
+        $this->cache->delete('seven_api_message');
     }
 
     public function deleteMessage($id) {
-        $this->db->query("DELETE FROM `" . DB_PREFIX . "sms77_api_message` WHERE id = '" . (int)$id . "'");
+        $this->db->query("DELETE FROM `" . DB_PREFIX . "seven_api_message` WHERE id = '" . (int)$id . "'");
 
-        $this->cache->delete('sms77_api_message');
+        $this->cache->delete('seven_api_message');
     }
 
     public function getMessage($id) {
-        $query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "sms77_api_message WHERE id = '" . (int)$id . "'");
+        $query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "seven_api_message WHERE id = '" . (int)$id . "'");
 
         return $query->row;
     }
 
     public function getMessages($data = []) {
         if ($data) {
-            $sql = "SELECT * FROM " . DB_PREFIX . "sms77_api_message";
+            $sql = "SELECT * FROM " . DB_PREFIX . "seven_api_message";
 
             if (isset($data['sort']) && in_array($data['sort'], [
                     'id.title',
@@ -77,25 +77,25 @@ class ModelExtensionModuleSms77ApiMessage extends Model {
 
         $langId = (int)$this->config->get('config_language_id');
 
-        $message = $this->cache->get('sms77_api_message.' . $langId);
+        $message = $this->cache->get('seven_api_message.' . $langId);
 
         if (!$message) {
-            $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "sms77_api_message");
+            $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "seven_api_message");
 
             $message = $query->rows;
 
-            $this->cache->set('sms77_api_message.' . $langId, $message);
+            $this->cache->set('seven_api_message.' . $langId, $message);
         }
 
         return $message;
     }
 
     public function getTotalMessages() {
-        return $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "sms77_api_message")->row['total'];
+        return $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "seven_api_message")->row['total'];
     }
 
     public function install() {
-        $this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "sms77_api_message` (
+        $this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "seven_api_message` (
 		  `id` INT(11) NOT NULL AUTO_INCREMENT,
 		  `config` TEXT NOT NULL,
           `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -105,6 +105,6 @@ class ModelExtensionModuleSms77ApiMessage extends Model {
     }
 
     public function uninstall() {
-        $this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "sms77_api_message`");
+        $this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "seven_api_message`");
     }
 }

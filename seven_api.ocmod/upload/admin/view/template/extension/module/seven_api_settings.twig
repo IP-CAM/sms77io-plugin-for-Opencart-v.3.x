@@ -55,7 +55,7 @@
                         </label>
 
                         <div class='col-sm-10'>
-                            <input name='sms77_api_key' value='{{ settings.sms77_api_key }}'
+                            <input name='seven_api_key' value='{{ settings.seven_api_key }}'
                                    class='form-control' id='input-key' required/>
 
                             {% if error_key %}
@@ -72,7 +72,7 @@
                         </label>
 
                         <div class='col-sm-10'>
-                            <input name='sms77_api_from' value='{{ settings.sms77_api_from }}'
+                            <input name='seven_api_from' value='{{ settings.seven_api_from }}'
                                    class='form-control' id='input-from'/>
 
                             {% if error_from %}
@@ -87,8 +87,8 @@
                         </label>
 
                         <div class='col-sm-10'>
-                            <input pattern='[A-Z|a-z|0-9|.|\-|_|@]+' name='sms77_api_label'
-                                   value='{{ settings.sms77_api_label }}'
+                            <input pattern='[A-Z|a-z|0-9|.|\-|_|@]+' name='seven_api_label'
+                                   value='{{ settings.seven_api_label }}'
                                    class='form-control' id='input-label'/>
 
                             {% if error_label %}
@@ -103,8 +103,8 @@
                         </label>
 
                         <div class='col-sm-10'>
-                            <input pattern='[A-Z|a-z|0-9|.|\-|_|@]+' name='sms77_api_foreign_id'
-                                   value='{{ settings.sms77_api_foreign_id }}'
+                            <input pattern='[A-Z|a-z|0-9|.|\-|_|@]+' name='seven_api_foreign_id'
+                                   value='{{ settings.seven_api_foreign_id }}'
                                    class='form-control' id='input-foreign_id'/>
 
                             {% if error_foreign_id %}
@@ -119,7 +119,7 @@
                         </label>
 
                         <div class='col-sm-10'>
-                            <input name='sms77_api_udh' value='{{ settings.sms77_api_udh }}'
+                            <input name='seven_api_udh' value='{{ settings.seven_api_udh }}'
                                    class='form-control' id='input-udh'/>
 
                             {% if error_udh %}
@@ -133,8 +133,8 @@
                         </label>
 
                         <div class='col-sm-10'>
-                            <input type='checkbox' name='sms77_api_debug'
-                                   {% if settings.sms77_api_debug %}checked{% endif %}
+                            <input type='checkbox' name='seven_api_debug'
+                                   {% if settings.seven_api_debug %}checked{% endif %}
                                    class='form-control' id='input-debug'/>
 
                             {% if error_debug %}
@@ -148,8 +148,8 @@
                                for='input-no_reload'>{{ setting_no_reload }}</label>
 
                         <div class='col-sm-10'>
-                            <input type='checkbox' name='sms77_api_no_reload'
-                                   {% if settings.sms77_api_no_reload %}checked{% endif %}
+                            <input type='checkbox' name='seven_api_no_reload'
+                                   {% if settings.seven_api_no_reload %}checked{% endif %}
                                    class='form-control' id='input-no_reload'/>
 
                             {% if error_no_reload %}
@@ -163,8 +163,8 @@
                                for='input-flash'>{{ setting_flash }}</label>
 
                         <div class='col-sm-10'>
-                            <input type='checkbox' name='sms77_api_flash'
-                                   {% if settings.sms77_api_flash %}checked{% endif %}
+                            <input type='checkbox' name='seven_api_flash'
+                                   {% if settings.seven_api_flash %}checked{% endif %}
                                    class='form-control' id='input-flash'/>
 
                             {% if error_flash %}
@@ -178,8 +178,8 @@
                                for='input-performance_tracking'>{{ setting_performance_tracking }}</label>
 
                         <div class='col-sm-10'>
-                            <input type='checkbox' name='sms77_api_performance_tracking'
-                                   {% if settings.sms77_api_performance_tracking %}checked{% endif %}
+                            <input type='checkbox' name='seven_api_performance_tracking'
+                                   {% if settings.seven_api_performance_tracking %}checked{% endif %}
                                    class='form-control' id='input-performance_tracking'/>
 
                             {% if error_performance_tracking %}
