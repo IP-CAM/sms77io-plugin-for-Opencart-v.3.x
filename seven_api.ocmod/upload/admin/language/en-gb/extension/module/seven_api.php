@@ -2,7 +2,6 @@
 $_['caption_msg_history'] = 'Records of all outgoing SMS';
 
 $_['error_key'] = 'Invalid API Key!';
-$_['error_debug'] = 'Invalid "Debug" value!';
 $_['error_delay'] = 'Invalid "Delay" value!';
 $_['error_flash'] = 'Invalid "Flash" value!';
 $_['error_foreign_id'] = 'Invalid Foreign ID!';
@@ -25,7 +24,6 @@ $_['heading_title'] = 'seven.io API';
 $_['placeholder_text'] = 'Hi {{firstname}} {{lastname}} ! Is ur email {{email}} correct? If given we will contact you on your fax {{fax}} in the future so please recheck.';
 
 $_['setting_key'] = 'API Key';
-$_['setting_debug'] = 'Debug';
 $_['setting_delay'] = 'Delay';
 $_['setting_flash'] = 'Flash';
 $_['setting_foreign_id'] = 'Foreign ID';

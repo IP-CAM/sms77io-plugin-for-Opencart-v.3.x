@@ -21,8 +21,8 @@ class ControllerExtensionModuleSevenApi extends Controller {
 
     public static $defaultSettings = ['status' => 1, 'name' => 'seven.io API'];
 
-    public static $commonFields = ['warning', 'from', 'label', 'udh', 'debug',
-        'no_reload', 'debug', 'flash', 'performance_tracking', 'foreign_id',];
+    public static $commonFields = ['warning', 'from', 'label', 'udh',
+        'no_reload', 'flash', 'performance_tracking', 'foreign_id',];
 
     public function index() {
         $this->load->language('extension/module/seven_api');
@@ -166,7 +166,6 @@ class ControllerExtensionModuleSevenApi extends Controller {
         $text = $this->_toValue('text');
         $to = $this->_toValue('to');
         $baseConfig = [
-            'debug' => $this->_toNumericBool('debug'),
             'delay' => $this->_toValue('delay'),
             'flash' => $this->_toNumericBool('flash'),
             'foreign_id' => $this->_toValue('foreign_id'),
